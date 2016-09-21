@@ -1,0 +1,9 @@
+﻿  main.cpp
+e:\vs2015opencv\linearalgebra_new\linearalgebra_new\matrix.h(522): warning C4244: “+=”: 从“double”转换到“float”，可能丢失数据
+  e:\vs2015opencv\linearalgebra_new\linearalgebra_new\matrix.h(496): note: 编译类 模板 成员函数“Matrix<float> Matrix<float>::RowOp(RorCOpType_2,int,double,int)”时
+  e:\vs2015opencv\linearalgebra_new\linearalgebra_new\matrix.h(693): note: 参见对正在编译的函数 模板 实例化“Matrix<float> Matrix<float>::RowOp(RorCOpType_2,int,double,int)”的引用
+  e:\vs2015opencv\linearalgebra_new\linearalgebra_new\matrix.h(300): note: 编译类 模板 成员函数“Matrix<float>::Matrix(const int &,const int &)”时
+  e:\vs2015opencv\linearalgebra_new\linearalgebra_new\main.cpp(9): note: 参见对正在编译的函数 模板 实例化“Matrix<float>::Matrix(const int &,const int &)”的引用
+  e:\vs2015opencv\linearalgebra_new\linearalgebra_new\main.cpp(9): note: 参见对正在编译的类 模板 实例化“Matrix<float>”的引用
+  LinearAlgebra_new.vcxproj -> E:\VS2015OpenCV\LinearAlgebra_new\Debug\LinearAlgebra_new.exe
+  LinearAlgebra_new.vcxproj -> E:\VS2015OpenCV\LinearAlgebra_new\Debug\LinearAlgebra_new.pdb (Full PDB)

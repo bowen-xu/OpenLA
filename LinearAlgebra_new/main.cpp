@@ -6,18 +6,23 @@ using namespace std;
 
 int main()
 {
-	Matrix<float> mat1(3, 3),  mat;
-	
-	mat(3, 3);
-	mat =
-		1, 4, 9,
-		2, 7, 7,
-		9, 6, 5;
+	Matrix<float> Coff(2, 2), constant(2, 1), solution(2, 1);
+	//解方程组
+	// 2*x +   y = 1
+	// x   + 5*y = 0
+	//结果： x = 5/9 = 0.56, y = -1/9 = -0.11;
 
-	mat.print();
+	Coff =			// 系数
+		2, 1,
+		1, 5;
+	constant =		// 常数项
+		1,
+		0;
 
-	printf("\n行列式：%.3f\n\n", mat.Determinant());
+	//解矩阵 等于 系数矩阵的逆 左乘 常数矩阵 
+	solution = Coff.Inverse() * constant;
 
+	solution.print();
 
 	return 1;
 }

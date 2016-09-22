@@ -46,6 +46,7 @@ public:
 	void		input();
 	Matrix<Tp>	zeros();
 	Matrix<Tp>	ones();
+	Matrix<Tp>	identity();
 	Matrix<Tp>	transpose();
 	Matrix<Tp>	RowOp(RorCOpType_1 op_type, int row1, int row2);			//初等行变换
 	Matrix<Tp>	RowOp(RorCOpType_2 op_type, int row1, double k);			//初等行变换
@@ -54,8 +55,9 @@ public:
 	Matrix<Tp>	ColOp(RorCOpType_2 op_type, int col1, double k);			//初等列变换
 	Matrix<Tp>	ColOp(RorCOpType_2 op_type, int col1, double k, int col2);	//初等列变换
 	long double	Determinant();
+	Matrix<Tp>	Inverse();
 
-	Matrix<Tp> operator =  (const Matrix<Tp> &mat);
+	Matrix<Tp> operator =  (Matrix<Tp> mat);
 	Matrix<Tp> operator +  (const Matrix<Tp> &mat);
 	Matrix<Tp> operator -  (const Matrix<Tp> &mat);
 	Matrix<Tp> operator *  (const Matrix<Tp> &mat);
@@ -92,7 +94,7 @@ Matrix<Tp>& Matrix<Tp>::operator ,  (const Tp ele)
 }
 
 template<typename Tp>
-Matrix<Tp> Matrix<Tp>::operator = (const Matrix<Tp> &mat)
+Matrix<Tp> Matrix<Tp>::operator = (Matrix<Tp> mat)
 {
 	if (rows == 0 || cols == 0 || rows != mat.rows || cols != mat.cols)
 	{
@@ -334,7 +336,7 @@ void Matrix<Tp>::print()
 	{
 		for (int j = 0; j < cols; j++)
 		{
-			cout << "\t" << pMat[i*cols + j];
+			printf( "\t%.2f", pMat[i*cols + j]);
 		}
 		cout << endl;
 	}
@@ -350,6 +352,32 @@ Matrix<Tp> Matrix<Tp>::zeros()
 		for (int j = 0; j < cols; j++)
 		{
 			*p = 0.0;
+			p++;
+		}
+	}
+	return (*this);
+}
+
+template<typename Tp>
+Matrix<Tp> Matrix<Tp>::identity()
+{
+	Tp *p = pMat;
+	if (cols != rows)
+	{
+		return (*this);
+	}
+	for (int i = 0; i < rows; i++)
+	{
+		for (int j = 0; j < cols; j++)
+		{
+			if (i == j)
+			{
+				*p = 1.0;
+			}
+			else
+			{
+				*p = 0.0;
+			}
 			p++;
 		}
 	}
@@ -635,12 +663,13 @@ Matrix<Tp>	Matrix<Tp>::ColOp(RorCOpType_2 op_type, int col1, double k, int col2)
 template<typename Tp>
 long double Matrix<Tp>::Determinant()
 {
-	Matrix<Tp> mat = (*this);
+	Matrix<Tp> mat;
 	vector<int> diagonal_pos(rows, 0);
 	int deal_count = 0;
 	long double det_val = 1;
 	long double min;
 	Tp *p = mat.pMat;
+	mat = (*this);
 
 	if (rows != cols)
 	{
@@ -669,7 +698,7 @@ long double Matrix<Tp>::Determinant()
 		int temp_row = deal_count;
 		for (i = deal_count, p = mat.pMat + deal_count*cols +j; i < rows; i++, p += rows)
 		{
-			if (fabs(*p) > 1e-7)
+			if (fabs(*p) > 1e-9)
 			{
 				min = *p;
 			}
@@ -677,7 +706,7 @@ long double Matrix<Tp>::Determinant()
 
 		for (i = deal_count, p = mat.pMat + deal_count*cols + j; i < rows; i++, p += rows)
 		{
-			if (fabs(*p) > 1e-7 && fabs(*p) <= (fabs(min) + 1e-7))
+			if (fabs(*p) > 1e-9 && fabs(*p) <= (fabs(min) + 1e-9))
 			{
 				min = *p;
 				temp_row = i;
@@ -687,7 +716,7 @@ long double Matrix<Tp>::Determinant()
 
 		for ( i = deal_count, p = mat.pMat + deal_count*cols + j; i < rows; i++, p += rows)
 		{
-			if (i != temp_row && fabs(*p) > 1e-7)
+			if (i != temp_row && fabs(*p) > 1e-9)
 			{
 				long double k = (*p) / min;
 				mat.RowOp(ELIMINATE_, i+1, -k, temp_row+1);
@@ -695,7 +724,6 @@ long double Matrix<Tp>::Determinant()
 		}
 		mat.RowOp(EXCHANGE_, deal_count+1, temp_row+1);
 		deal_count++;
-		mat.print();
 	}
 	
 	p = mat.pMat;
@@ -707,26 +735,88 @@ long double Matrix<Tp>::Determinant()
 	return det_val;
 }
 
-
 template<typename Tp>
-class E : public Matrix<Tp>
+Matrix<Tp> Matrix<Tp>::Inverse()
 {
-public:
-	E();
-	E(const int &rows, const int &cols);
-};
+	Matrix<Tp> mat;
+	Matrix<Tp> inv(rows, cols);
 
-template<typename Tp>
-E<Tp>::E()
-{
-	rows = 0;
-	cols = 0;
-}
+	mat = (*this);
+	inv.identity();
 
-template<typename Tp>
-E<Tp>::E(const int &row, const int &col)
-{
+	vector<int> diagonal_pos(rows, 0);
+	int deal_count = 0;
+	long double det_val = 1;
+	long double min;
+	long double k;
+	Tp *p = mat.pMat;
+
+	if (rows != cols)
+	{
+		return (*this);
+	}
+	signed int i, j;
+
+	//行列式为0，逆矩阵不存在
+	if (abs(mat.Determinant()) < 1e-9)
+	{
+		return (*this);
+	}
+
+	for (j = 0; j < cols; j++)
+	{
+		int temp_row = deal_count;
+		for (i = deal_count, p = mat.pMat + deal_count*cols + j; i < rows; i++, p += rows)
+		{
+			if (fabs(*p) > 1e-9)
+			{
+				min = *p;
+			}
+		}
+
+		for (i = deal_count, p = mat.pMat + deal_count*cols + j; i < rows; i++, p += rows)
+		{
+			if (fabs(*p) > 1e-9 && fabs(*p) <= (fabs(min) + 1e-9))
+			{
+				min = *p;
+				temp_row = i;
+				diagonal_pos[i] = j;
+			}
+		}
+
+		for (i = deal_count, p = mat.pMat + deal_count*cols + j; i < rows; i++, p += rows)
+		{
+			if (i != temp_row && fabs(*p) > 1e-9)
+			{
+				k = (*p) / min;
+				mat.RowOp(ELIMINATE_, i + 1, -k, temp_row + 1);
+				inv.RowOp(ELIMINATE_, i + 1, -k, temp_row + 1);
+			}
+		}
+		mat.RowOp(EXCHANGE_, deal_count + 1, temp_row + 1);
+		inv.RowOp(EXCHANGE_, deal_count + 1, temp_row + 1);
+		deal_count++;
+	}
+
+	p = mat.pMat;
+	for (j = cols - 1; j > 0; j--)
+	{
+		long double buf_val = p[j*cols + j];
+		for (i = 0; i < j; i++)
+		{
+			k = p[cols * i + j] / buf_val;
+			mat.RowOp(ELIMINATE_, i + 1, -k, j + 1);
+			inv.RowOp(ELIMINATE_, i + 1, -k, j + 1);
+		}
+	}
+	for (i = 0; i < rows; i++)
+	{
+		k = p[i*cols + i];
+		inv.RowOp(MULTIPLY_, i + 1, 1.0 / k);
+	}
+	return inv;
 	
 }
+
 
 #endif // ! _CHAPTER1_H_

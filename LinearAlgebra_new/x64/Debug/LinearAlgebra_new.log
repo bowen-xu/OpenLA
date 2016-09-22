@@ -1,0 +1,12 @@
+﻿  main.cpp
+f:\msysgit\msysgit\openla\linearalgebra_new\matrix.h(550): warning C4244: “+=”: 从“double”转换到“float”，可能丢失数据
+  f:\msysgit\msysgit\openla\linearalgebra_new\matrix.h(524): note: 编译类 模板 成员函数“Matrix<float> Matrix<float>::RowOp(RorCOpType_2,int,double,int)”时
+  f:\msysgit\msysgit\openla\linearalgebra_new\matrix.h(792): note: 参见对正在编译的函数 模板 实例化“Matrix<float> Matrix<float>::RowOp(RorCOpType_2,int,double,int)”的引用
+  f:\msysgit\msysgit\openla\linearalgebra_new\matrix.h(302): note: 编译类 模板 成员函数“Matrix<float>::Matrix(const int &,const int &)”时
+  f:\msysgit\msysgit\openla\linearalgebra_new\main.cpp(9): note: 参见对正在编译的函数 模板 实例化“Matrix<float>::Matrix(const int &,const int &)”的引用
+  f:\msysgit\msysgit\openla\linearalgebra_new\main.cpp(9): note: 参见对正在编译的类 模板 实例化“Matrix<float>”的引用
+f:\msysgit\msysgit\openla\linearalgebra_new\matrix.h(517): warning C4244: “*=”: 从“double”转换到“float”，可能丢失数据
+  f:\msysgit\msysgit\openla\linearalgebra_new\matrix.h(500): note: 编译类 模板 成员函数“Matrix<float> Matrix<float>::RowOp(RorCOpType_2,int,double)”时
+  f:\msysgit\msysgit\openla\linearalgebra_new\matrix.h(815): note: 参见对正在编译的函数 模板 实例化“Matrix<float> Matrix<float>::RowOp(RorCOpType_2,int,double)”的引用
+  LinearAlgebra_new.vcxproj -> F:\msysgit\msysgit\OpenLA\x64\Debug\LinearAlgebra_new.exe
+  LinearAlgebra_new.vcxproj -> F:\msysgit\msysgit\OpenLA\x64\Debug\LinearAlgebra_new.pdb (Full PDB)
